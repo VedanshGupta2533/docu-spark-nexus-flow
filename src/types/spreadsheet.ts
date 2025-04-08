@@ -9,3 +9,9 @@ export type SheetData = {
   cols: number;
   cells: Record<string, CellData>;
 };
+
+export type SpreadsheetImportSource = {
+  type: 'csv' | 'xlsx' | 'ocr';
+  name: string;
+  data: any;
+};
