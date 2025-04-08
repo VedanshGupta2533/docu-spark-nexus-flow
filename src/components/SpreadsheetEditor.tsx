@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,9 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
-// Simple spreadsheet data structure
 type CellData = {
   value: string;
   formula?: string;
@@ -33,11 +31,9 @@ const SpreadsheetEditor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Alphabet for column headers
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   useEffect(() => {
-    // Auto-save effect
     if (hasChanges) {
       const timer = setTimeout(() => {
         saveSpreadsheet();
@@ -86,37 +82,34 @@ const SpreadsheetEditor = () => {
   const saveSpreadsheet = () => {
     setIsSaving(true);
     
-    // Simulate API call to save spreadsheet
     setTimeout(() => {
       setIsSaving(false);
       setHasChanges(false);
-      toast.success("Spreadsheet saved successfully");
+      toast("Spreadsheet saved successfully", {
+        description: "All changes have been saved",
+      });
     }, 1000);
   };
 
   const exportToCsv = () => {
-    // Simple CSV export implementation
     let csvContent = "";
     
-    // Generate CSV header row
     let headerRow = "";
     for (let col = 0; col < sheetData.cols; col++) {
       headerRow += alphabet[col] + (col < sheetData.cols - 1 ? "," : "");
     }
     csvContent += headerRow + "\n";
     
-    // Generate CSV data rows
     for (let row = 0; row < sheetData.rows; row++) {
       let rowContent = "";
       for (let col = 0; col < sheetData.cols; col++) {
         const cellId = getCellId(row, col);
-        const cellValue = getCellValue(cellId).replace(/,/g, ""); // Remove commas to avoid CSV issues
+        const cellValue = getCellValue(cellId).replace(/,/g, "");
         rowContent += cellValue + (col < sheetData.cols - 1 ? "," : "");
       }
       csvContent += rowContent + "\n";
     }
     
-    // Create and download the CSV file
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -126,7 +119,9 @@ const SpreadsheetEditor = () => {
     link.click();
     document.body.removeChild(link);
     
-    toast.success("Spreadsheet exported as CSV");
+    toast("Spreadsheet exported as CSV", {
+      description: "Download started",
+    });
   };
 
   return (
@@ -180,7 +175,6 @@ const SpreadsheetEditor = () => {
 
       <div className="overflow-auto border rounded-md">
         <div className="min-w-max">
-          {/* Column Headers */}
           <div className="flex border-b sticky top-0 bg-card z-10">
             <div className="w-12 h-8 border-r flex items-center justify-center bg-muted"></div>
             {Array.from({ length: sheetData.cols }).map((_, colIndex) => (
@@ -199,16 +193,13 @@ const SpreadsheetEditor = () => {
             </div>
           </div>
 
-          {/* Rows */}
           <div>
             {Array.from({ length: sheetData.rows }).map((_, rowIndex) => (
               <div key={`row-${rowIndex}`} className="flex">
-                {/* Row header */}
                 <div className="w-12 border-r flex items-center justify-center bg-muted sticky left-0">
                   {rowIndex + 1}
                 </div>
                 
-                {/* Cells */}
                 {Array.from({ length: sheetData.cols }).map((_, colIndex) => {
                   const cellId = getCellId(rowIndex, colIndex);
                   return (
@@ -225,7 +216,6 @@ const SpreadsheetEditor = () => {
               </div>
             ))}
 
-            {/* Add Row Button */}
             <div className="flex">
               <div 
                 className="w-full h-10 border-t flex items-center justify-center bg-muted cursor-pointer hover:bg-muted/70"
