@@ -1,6 +1,6 @@
 
 import { useState, useRef, useCallback } from "react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { uploadFile, FileMetadata, supportedFileTypes } from "@/services/fileService";
 
 export interface UseFileUploadOptions {
